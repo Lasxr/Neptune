@@ -1,0 +1,18 @@
+Neptune 
+ - Control with LoRa-SX1276
+ - Waterproof
+ - Range of control < 8Km
+
+
+Direct_Neptune
+ - LoRa-SX1276 
+ - Remote to Recive
+ - Connect with Camera-Recive
+
+
+Recive_Neptune
+ - Space for Provisions
+ - 1 Motor and 1 Servo
+ - Recive for LoRa
+ - Camera Realtime
+ - Sensor [A02YYUW] for distance
