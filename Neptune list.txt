@@ -12,7 +12,10 @@ Direct_Neptune
 
 Recive_Neptune
  - Space for Provisions
- - 1 Motor and 1 Servo
+ - 2 Motor LR
  - Recive for LoRa
- - Camera Realtime
+ - Camera video
  - Sensor [A02YYUW] for distance
+ - GNSS 
+ - Speaker and LED light
+ - Radio signal
