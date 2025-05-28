@@ -2,7 +2,12 @@ Neptune
  - Control with LoRa-SX1276
  - Waterproof
  - Range of control < 8Km
-
+ - GNSS tracking
+ - Realtime Camera
+ - Microphone for communicate
+ - Emergency light 
+ - night exploration
+ 
 
 Direct_Neptune
  - LoRa-SX1276 
@@ -16,6 +21,6 @@ Recive_Neptune
  - Recive for LoRa
  - Camera video
  - Sensor [A02YYUW] for distance
- - GNSS 
+ - GNSS tracking
  - Speaker and LED light
  - Radio signal
