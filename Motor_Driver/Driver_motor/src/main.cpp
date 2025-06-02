@@ -1,70 +1,79 @@
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 
-// Motor Digital
-int M1L = 5;
-int M1R = 6;
-int M2L = 10;
-int M2R = 11;
 
-// PWM Motor
-int MPWM1L = 3;
-int MPWM1R = 4;
-int MPWM2L = 8;
-int MPWM2R = 9;
+SoftwareSerial mySerial(11, 12); // RX, TX
 
-char key = '0';
+// ขาเชื่อมต่อกับ BTS7960
+const int M1RPWM = 5;
+const int M1LPWM = 6;
+const int M1R_EN = 7;
+const int M1L_EN = 8;
 
-int LED = 13; 
+const int M2RPWM = 10;
+const int M2LPWM = 9;
+const int M2R_EN = 4;
+const int M2L_EN = 3;
 
-void setup(){
+
+void setup() {
   Serial.begin(9600);
-  Serial.println("Program start!");
-  // Motor
-  pinMode(M1L, OUTPUT);
-  pinMode(M1R, OUTPUT);
-  pinMode(M2L, OUTPUT);
-  pinMode(M2R, OUTPUT);
-  // PWM
-  pinMode(MPWM1L, OUTPUT);
-  pinMode(MPWM1R, OUTPUT);
-  pinMode(MPWM2L, OUTPUT);
-  pinMode(MPWM2R, OUTPUT);
 
-  pinMode(LED, OUTPUT);
+  pinMode(M1RPWM, OUTPUT);
+  pinMode(M1LPWM, OUTPUT);
+  pinMode(M1R_EN, OUTPUT);
+  pinMode(M1L_EN, OUTPUT);
 
-  Serial.println("Setup complete!");
+  pinMode(M2RPWM, OUTPUT);
+  pinMode(M2LPWM, OUTPUT);
+  pinMode(M2R_EN, OUTPUT);
+  pinMode(M2L_EN, OUTPUT);
+
+  // เปิดใช้งานทั้งสองขา
+  digitalWrite(M1R_EN, HIGH);
+  digitalWrite(M1L_EN, HIGH);
+  digitalWrite(M2R_EN, HIGH);
+  digitalWrite(M2L_EN, HIGH);
 }
 
-void loop(){
-  while(Serial.available() > 0){
-    key = Serial.read();
-    Serial.print("Key: ");
-    Serial.println(key);
-    
-    switch(key){
-      case '1':
-        digitalWrite(M1L, HIGH);
-        break;
-      case '2':
-        digitalWrite(M1L, LOW);
-        digitalWrite(M1R, HIGH);
-        break;
-      case '3':
-        digitalWrite(M2L, HIGH);
-        digitalWrite(M2R, LOW);
-        break;
-      case '4':
-        digitalWrite(M2L, LOW);
-        digitalWrite(M2R, HIGH);
-        break;
-      case '5':
-        digitalWrite(LED, HIGH);
-        break;
-      case '6':
-        digitalWrite(LED, LOW);
-        break;
-      default:
-        Serial.println("Invalid key!");
-    }
+
+void ReciveCmd(){
+  if (mySerial.available()) {
+    String msg = mySerial.readStringUntil('\n');
+    Serial.println("Received: " + msg);
   }
+}
+
+void Forward(int time){
+  Serial.println("Forward");
+  analogWrite(M1RPWM, 255);  // ความเร็ว 0-255
+  analogWrite(M1LPWM, 0);
+  analogWrite(M2RPWM, 255);  // ความเร็ว 0-255
+  analogWrite(M2LPWM, 0);
+  delay(time);
+}
+
+void Backward(int time){
+  Serial.println("Backward");
+  analogWrite(M1RPWM, 0);  // ความเร็ว 0-255
+  analogWrite(M1LPWM, 255);
+  analogWrite(M2RPWM, 0);  // ความเร็ว 0-255
+  analogWrite(M2LPWM, 255);
+  delay(time);
+}
+
+void Stop(int time){
+  Serial.println("Stop");
+  analogWrite(M1RPWM, 0);  // ความเร็ว 0-255
+  analogWrite(M1LPWM, 0);
+  analogWrite(M2RPWM, 0);  // ความเร็ว 0-255
+  analogWrite(M2LPWM, 0);
+  delay(time);
+}
+
+void loop() {
+  Forward(3000);
+  Stop(1000);
+  Backward(3000);
+  Stop(1000);
 }
