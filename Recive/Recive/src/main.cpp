@@ -1,11 +1,16 @@
 #include <Arduino.h>
+#include <BluetoothSerial.h>
 
+BluetoothSerial SerialBT;
+
+
+bool isConnected = false;
 
 void setup() {
   Serial.begin(115200);
-  Serial1.begin(9600, SERIAL_8N1, 17 , 16);
-
-
+  Serial1.begin(115200, SERIAL_8N1, 17 , 16);
+  SerialBT.begin("Neptune Inwza");
+  Serial.println("Bluetooth ready");
 }
 
 void TestCmd(String cmd) {
@@ -15,8 +20,27 @@ void TestCmd(String cmd) {
 
 }
 
+void BTReceive() {
+  while (SerialBT.available()) {
+    char BTcmd = SerialBT.read();
+    Serial.println("Received: " + String(BTcmd));
+    Serial1.print(BTcmd);
+  }
+}
+
 
 void loop() {
-  TestCmd("Frame Sataya");
-  delay(1000);
+  if (SerialBT.hasClient()) {
+    if (!isConnected) {
+      Serial.println("Bluetooth connected");
+      isConnected = true;
+    }
+    BTReceive();
+  } else {
+    if (isConnected) {
+      Serial.println("Bluetooth disconnected");
+      isConnected = false;
+    }
+  }
+  delay(100);
 }
