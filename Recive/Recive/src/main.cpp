@@ -8,7 +8,7 @@ bool isConnected = false;
 
 void setup() {
   Serial.begin(115200);
-  Serial1.begin(115200, SERIAL_8N1, 17 , 16); // RX-16 TX-17
+  Serial1.begin(115200, SERIAL_8N1, 17 , 16); // RX-17 TX-16
   SerialBT.begin("Neptune Inwza");
   Serial.println("Bluetooth ready");
 }
