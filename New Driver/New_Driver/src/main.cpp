@@ -1,19 +1,21 @@
 #include <Arduino.h>
+#include <ESP32Servo.h>
+
+
+
+Servo myServo;
 
 // Motor 1
 const int M1L = 27;
 const int M1R = 26;
-const int M1L_Speed = 14;
-const int M1R_Speed = 25;
-// Motor 2
-const int M2L = 32;
-const int M2R = 33;
-const int M2L_Speed = 5;
-const int M2R_Speed = 4;
+const int M1L_Speed = 25;
+const int M1R_Speed = 14;
 
 void setup() {
   Serial.begin(115200);
   Serial1.begin(115200, SERIAL_8N1, 17, 16);
+
+  myServo.attach(13);
 
   // M1
   pinMode(M1L, OUTPUT); 
@@ -27,46 +29,30 @@ void setup() {
   ledcSetup(1, 1000, 8);
   ledcSetup(2, 1000, 8);
 
-  // M2
-  pinMode(M2L, OUTPUT);
-  pinMode(M2R, OUTPUT);
-  pinMode(M2L_Speed, OUTPUT);
-  pinMode(M2R_Speed, OUTPUT);
-  digitalWrite(M2L, HIGH);
-  digitalWrite(M2R, HIGH);
-  ledcAttachPin(M2L_Speed, 3);
-  ledcAttachPin(M2R_Speed, 4);
-  ledcSetup(3, 1000, 8);
-  ledcSetup(4, 1000, 8);
-
-
 }
 
 void Forward(int speed) {
   Serial.println("Forward");
   ledcWrite(1, speed);
   ledcWrite(2, 0);
-  ledcWrite(3, speed);
-  ledcWrite(4, 0);
+
 }
 
 void Backward(int speed) {
   Serial.println("Backward");
   ledcWrite(1, 0);
   ledcWrite(2, speed);
-  ledcWrite(3, 0);
-  ledcWrite(4, speed);
+
 }
 
 void Stop() {
   Serial.println("Stop");
   ledcWrite(1, 0);
   ledcWrite(2, 0);
-  ledcWrite(3, 0);
-  ledcWrite(4, 0);
+
 }
 
-void loop() {
+void RxCmd(){
   if (Serial1.available()) {
     char cmd = Serial1.read();
     switch (cmd) {
@@ -85,4 +71,15 @@ void loop() {
   
 }
 
-
+void loop() {
+  if (Serial.available()) {
+    int angle = Serial.parseInt();
+    if (angle >= 0 && angle <= 180) {
+      myServo.write(angle);
+      Serial.print("Rotated to ");
+      Serial.println(angle);
+    } else {
+      Serial.println("Invalid angle. Use 0–180.");
+    }
+  }
+}

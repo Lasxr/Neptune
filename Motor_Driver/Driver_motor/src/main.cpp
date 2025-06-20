@@ -1,6 +1,10 @@
 #include<Arduino.h>
 #include<HardwareSerial.h>
 
+#include <Servo.h>
+
+Servo myServo;
+
 const int M1RPWM = 5;
 const int M1LPWM = 6;
 const int M1R_EN = 7;
@@ -17,6 +21,8 @@ const int Blue = 12;
 
 void setup() {
   Serial.begin(115200); 
+
+  myServo.attach(9);
 
   pinMode(M1RPWM, OUTPUT);
   pinMode(M1LPWM, OUTPUT);
@@ -67,23 +73,15 @@ void Stop() {
   analogWrite(M2RPWM, 0);
   analogWrite(M2LPWM, 0);
 }
-
 void loop() {
-  
   if (Serial.available()) {
-    char cmd = Serial.read();
-    switch (cmd) {
-      case '1':
-        Forward();
-        break;
-      case '2':
-        Backward();
-        break;
-      case '0':
-        Stop();
-        break;
+    int angle = Serial.parseInt();
+    if (angle >= 0 && angle <= 180) {
+      myServo.write(angle);
+      Serial.print("Rotated to ");
+      Serial.println(angle);
+    } else {
+      Serial.println("Invalid angle. Use 0–180.");
     }
-  }else{
   }
-  
 }
