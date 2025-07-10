@@ -43,45 +43,8 @@ void setup() {
   digitalWrite(M2L_EN, HIGH);
 }
 
-
-void Forward() {
-  digitalWrite(Green, HIGH);
-  digitalWrite(Red, LOW);
-  digitalWrite(Blue, LOW);
-  analogWrite(M1RPWM, 255);
-  analogWrite(M1LPWM, 0);
-  analogWrite(M2RPWM, 255);
-  analogWrite(M2LPWM, 0);
-}
-
-void Backward() {
-  digitalWrite(Green, LOW);
-  digitalWrite(Red, LOW);
-  digitalWrite(Blue, HIGH);
-  analogWrite(M1RPWM, 0);
-  analogWrite(M1LPWM, 255);
-  analogWrite(M2RPWM, 0);
-  analogWrite(M2LPWM, 255);
-}
-
-void Stop() {
-  digitalWrite(Green, LOW);
-  digitalWrite(Red, HIGH);
-  digitalWrite(Blue, LOW);
-  analogWrite(M1RPWM, 0);
-  analogWrite(M1LPWM, 0);
-  analogWrite(M2RPWM, 0);
-  analogWrite(M2LPWM, 0);
-}
 void loop() {
-  if (Serial.available()) {
-    int angle = Serial.parseInt();
-    if (angle >= 0 && angle <= 180) {
-      myServo.write(angle);
-      Serial.print("Rotated to ");
-      Serial.println(angle);
-    } else {
-      Serial.println("Invalid angle. Use 0–180.");
-    }
-  }
+
+
+
 }

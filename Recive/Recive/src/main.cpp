@@ -1,46 +1,28 @@
 #include <Arduino.h>
-#include <BluetoothSerial.h>
 
-BluetoothSerial SerialBT;
-
-
-bool isConnected = false;
+int xPin = 34;
+int yPin = 35;
+int swPin = 25;
 
 void setup() {
   Serial.begin(115200);
-  Serial1.begin(115200, SERIAL_8N1, 17 , 16); // RX-17 TX-16
-  SerialBT.begin("Neptune Inwza");
-  Serial.println("Bluetooth ready");
-}
-
-void TestCmd(String cmd) {
-  Serial1.print(cmd);
-  Serial1.print("\r\n");
-  Serial.println("Command sent: " + cmd);
-
-}
-
-void BTReceive() {
-  while (SerialBT.available()) {
-    char BTcmd = SerialBT.read();
-    Serial.println("Received: " + String(BTcmd));
-    Serial1.write(BTcmd);
-  }
+  pinMode(swPin, INPUT_PULLUP);
 }
 
 
 void loop() {
-  if (SerialBT.hasClient()) {
-    if (!isConnected) {
-      Serial.println("Bluetooth connected");
-      isConnected = true;
-    }
-    BTReceive();
-  } else {
-    if (isConnected) {
-      Serial.println("Bluetooth disconnected");
-      isConnected = false;
-    }
-  }
-  delay(100);
+  int xRaw = analogRead(xPin);
+  int yRaw = analogRead(yPin);
+
+  int xVal = map(xRaw, 0, 4095, 0, 255);
+  int yVal = map(yRaw, 0, 4095, 0, 255);
+
+  bool pressed = digitalRead(swPin) == LOW;
+  Serial.print("X : ");
+  Serial.print(xVal);
+  Serial.print(" |  Y : ");
+  Serial.print(yVal);
+  Serial.print(" |  Pressed : ");
+  Serial.println(pressed ? "YES" : "NO");
+  delay(50);
 }
