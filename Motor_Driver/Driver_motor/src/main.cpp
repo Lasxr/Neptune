@@ -1,9 +1,6 @@
 #include<Arduino.h>
-#include<HardwareSerial.h>
-
-#include <Servo.h>
-
-Servo myServo;
+#include <SPI.h> 
+#include <LoRa.h>
 
 const int M1RPWM = 5;
 const int M1LPWM = 6;
@@ -22,8 +19,6 @@ const int Blue = 12;
 void setup() {
   Serial.begin(115200); 
 
-  myServo.attach(9);
-
   pinMode(M1RPWM, OUTPUT);
   pinMode(M1LPWM, OUTPUT);
   pinMode(M1R_EN, OUTPUT);
@@ -41,10 +36,26 @@ void setup() {
   digitalWrite(M1L_EN, HIGH);
   digitalWrite(M2R_EN, HIGH);
   digitalWrite(M2L_EN, HIGH);
+
+  LoRa.setPins(5, 14, 26);    // NSS, RST, DIO0
+  if (!LoRa.begin(433E6)) {
+    Serial.println("LoRa init failed!");
+    while (1);
+  }
+  Serial.println("LoRa Receiver Ready");
+
+
 }
 
 void loop() {
-
-
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    String msg = "";
+    while (LoRa.available()) {
+      msg += (char)LoRa.read();
+    }
+    Serial.print("📩 รับข้อความ: ");
+    Serial.println(msg);
+  }
 
 }
