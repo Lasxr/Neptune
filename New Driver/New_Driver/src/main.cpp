@@ -11,6 +11,8 @@ void setup() {
     Serial.println("LoRa init failed!");
     while (1);
   }
+  //LoRa.setTxPower(10);
+
   Serial.println("LoRa Receiver Ready");
 
 
@@ -26,5 +28,5 @@ void loop() {
     Serial.print("Recived : ");
     Serial.println(msg);
   }
-
+  delay(20);
 }
