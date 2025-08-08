@@ -117,9 +117,12 @@ void JoySent(int Speed){
   display.print("      Max Speed !");
   display.display();
   digitalWrite(On_Board, 1);
-}else{
+  }else{
   digitalWrite(On_Board, 0);
-}
+  }
+
+
+
 }
 
 
