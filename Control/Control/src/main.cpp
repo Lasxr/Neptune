@@ -54,7 +54,6 @@ void setup() {
   display.display();
 
 }
-
 void JoySent(int Speed){
 
   int RawX = analogRead(Xpin);
@@ -64,7 +63,6 @@ void JoySent(int Speed){
 
   int joyX = RawX - Center;
   int joyY = RawY - Center;
-
 
   if (abs(joyX) < DeadZone) joyX = 0;
   if (abs(joyY) < DeadZone) joyY = 0;
@@ -117,14 +115,10 @@ void JoySent(int Speed){
   display.print("      Max Speed !");
   display.display();
   digitalWrite(On_Board, 1);
-  }else{
+}else{
   digitalWrite(On_Board, 0);
-  }
-
-
-
 }
-
+}
 
 void loop() {
   JoySent(125);   //ถ้ามึงออกเกิน 200 Driver มึงกลับสวรรค์แน่

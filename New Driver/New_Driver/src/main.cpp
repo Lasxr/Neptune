@@ -14,7 +14,7 @@ int M2_L = 13;
 int M2_R = 12;
 
 unsigned long lastReceiveTime = 0;
-unsigned long timeoutDuration = 5000;
+unsigned long timeoutDuration = 2000;
 
 int xVal, yVal, swVal;
 
@@ -29,6 +29,9 @@ void setup() {
     digitalWrite(On_Board, 0);
     while (1);
   }
+  LoRa.setTxPower(10);
+
+
 
   pinMode(M1_L, OUTPUT);
   pinMode(M1_R, OUTPUT);
@@ -91,7 +94,9 @@ void Motor_Run(int Speed_L, int Speed_R){
 
 }
 
-void loop() {
+
+
+void  loop() {
   int packetSize = LoRa.parsePacket();
   if (packetSize) {
     String msg = "";
@@ -116,16 +121,13 @@ void loop() {
 
     lastReceiveTime = millis();
   }
-
-
-
+  delay(20);
   if (millis() - lastReceiveTime > timeoutDuration) {
   xVal = 0;
   yVal = 0;
   swVal = 0;
   digitalWrite(On_Board, LOW);
+
   ESP.restart();
+  }
 }
-}
-
-
