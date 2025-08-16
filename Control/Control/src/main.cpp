@@ -39,6 +39,7 @@ void setup() {
 
   if (!LoRa.begin(433E6)) {
     Serial.println("LoRa init failed!");
+    digitalWrite(On_Board, 1);
     while (1);
   }
   //LoRa.setTxPower(10);

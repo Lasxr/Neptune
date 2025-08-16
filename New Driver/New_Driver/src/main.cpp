@@ -1,6 +1,8 @@
 #include<Arduino.h>
 #include <SPI.h> 
 #include <LoRa.h>
+#include <esp_task_wdt.h>
+
 
 int On_Board = 2;
 
@@ -20,6 +22,9 @@ int xVal, yVal, swVal;
 
 void setup() {
   Serial.begin(115200);
+
+  esp_task_wdt_init(4, true);
+
 
   pinMode(On_Board, OUTPUT);
 
@@ -46,6 +51,7 @@ void setup() {
   digitalWrite(On_Board, 1);
   Serial.println("LoRa Receiver Ready");
 
+  esp_task_wdt_add(NULL);
 }
 
 void parseData(String data) {
@@ -116,12 +122,23 @@ void  loop() {
     
     Con_L = constrain(Con_L, -125, 125);
     Con_R = constrain(Con_R, -125, 125);
-    
-    Motor_Run(Con_L, Con_R);
+
+    if(swVal == 1){
+      ESP.restart();
+    }
+
+    if(yVal > 0){
+      Motor_Run(Con_L, Con_R);
+    }else if (yVal < 0){
+      Motor_Run(Con_R, Con_L);
+    }else{
+      Motor_Run(Con_L, Con_R);
+    }
 
     lastReceiveTime = millis();
   }
   delay(20);
+  esp_task_wdt_reset(); 
   if (millis() - lastReceiveTime > timeoutDuration) {
   xVal = 0;
   yVal = 0;
@@ -130,4 +147,6 @@ void  loop() {
 
   ESP.restart();
   }
+
+
 }
